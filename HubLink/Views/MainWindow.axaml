@@ -1,0 +1,146 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:HubLink.ViewModels"
+        xmlns:models="using:HubLink.Models"
+        x:Class="HubLink.Views.MainWindow"
+        x:DataType="vm:HubLinkViewModel"
+        Title="HubLink - Regional Logistics"
+        Width="1000"
+        Height="820"
+        MinWidth="700"
+        MinHeight="550">
+
+	<ScrollViewer>
+		<StackPanel Margin="24" Spacing="14">
+
+			<TextBlock Text="HubLink"
+                       FontSize="30"
+                       FontWeight="Bold" />
+
+			<TextBlock Text="Regional Logistics Data Exchange"
+                       FontSize="16" />
+
+			<StackPanel Spacing="10"
+                        IsEnabled="{Binding IsNotBusy}">
+
+				<TextBlock Text="Server address" />
+				<TextBox Text="{Binding BaseAddress, Mode=TwoWay}" />
+
+				<Grid ColumnDefinitions="*,*" Margin="0,0,0,4">
+					<StackPanel Grid.Column="0" Spacing="6"
+                                Margin="0,0,12,0">
+						<TextBlock Text="Branch code" />
+						<TextBox Text="{Binding BranchCode, Mode=TwoWay}" />
+					</StackPanel>
+
+					<StackPanel Grid.Column="1" Spacing="6">
+						<TextBlock Text="Timeout in seconds" />
+						<TextBox Text="{Binding TimeoutSeconds, Mode=TwoWay}" />
+					</StackPanel>
+				</Grid>
+
+				<TextBlock Text="Request mode — use normal for regular operation"
+                           TextWrapping="Wrap" />
+
+				<ComboBox ItemsSource="{Binding RequestModes}"
+                          SelectedItem="{Binding RequestMode, Mode=TwoWay}"
+                          HorizontalAlignment="Stretch" />
+
+				<Button Content="Refresh / Retry"
+                        Command="{Binding RefreshCommand}"
+                        Padding="18,10" />
+
+			</StackPanel>
+
+			<ProgressBar IsVisible="{Binding IsBusy}"
+                         IsIndeterminate="True"
+                         Height="4" />
+
+			<Border BorderBrush="Gray"
+                    BorderThickness="1"
+                    CornerRadius="6"
+                    Padding="12">
+				<TextBlock Text="{Binding Message}"
+                           TextWrapping="Wrap" />
+			</Border>
+
+			<TextBlock Text="Branch Summary"
+                       FontSize="20"
+                       FontWeight="Bold" />
+
+			<TextBlock Text="{Binding SummaryText}"
+                       TextWrapping="Wrap" />
+
+			<StackPanel Spacing="10"
+                        IsEnabled="{Binding IsNotBusy}">
+
+				<TextBlock Text="Filter displayed shipments by status"
+                           FontWeight="Bold" />
+
+				<ComboBox ItemsSource="{Binding StatusOptions}"
+                          SelectedItem="{Binding SelectedStatus, Mode=TwoWay}"
+                          HorizontalAlignment="Stretch" />
+
+				<TextBlock Text="CSV destination — enter a new filename for each export"
+                           TextWrapping="Wrap" />
+
+				<TextBox Text="{Binding ExportPath, Mode=TwoWay}" />
+
+				<Button Content="Export Displayed Shipments"
+                        Command="{Binding ExportCommand}"
+                        Padding="18,10" />
+
+			</StackPanel>
+
+			<TextBlock Text="Shipments"
+                       FontSize="20"
+                       FontWeight="Bold" />
+
+			<TextBlock Text="{Binding DisplayedShipments.Count,
+                                     StringFormat='Displayed records: {0}'}" />
+
+			<ItemsControl ItemsSource="{Binding DisplayedShipments}">
+				<ItemsControl.ItemTemplate>
+					<DataTemplate x:DataType="models:Shipment">
+
+						<Border BorderBrush="Gray"
+                                BorderThickness="1"
+                                CornerRadius="6"
+                                Padding="12"
+                                Margin="0,0,0,10">
+
+							<StackPanel Spacing="5">
+
+								<TextBlock Text="{Binding TrackingNumber}"
+                                           FontSize="18"
+                                           FontWeight="Bold" />
+
+								<TextBlock Text="{Binding BranchCode,
+                                                         StringFormat='Branch: {0}'}" />
+
+								<TextBlock Text="{Binding Origin,
+                                                         StringFormat='Origin: {0}'}"
+                                           TextWrapping="Wrap" />
+
+								<TextBlock Text="{Binding Destination,
+                                                         StringFormat='Destination: {0}'}"
+                                           TextWrapping="Wrap" />
+
+								<TextBlock Text="{Binding Status,
+                                                         StringFormat='Status: {0}'}"
+                                           FontWeight="Bold" />
+
+								<TextBlock Text="{Binding LastUpdatedUtc,
+                                    StringFormat='Last updated (UTC): {0:yyyy-MM-dd HH:mm:ss}'}"
+                                           TextWrapping="Wrap" />
+
+							</StackPanel>
+						</Border>
+
+					</DataTemplate>
+				</ItemsControl.ItemTemplate>
+			</ItemsControl>
+
+		</StackPanel>
+	</ScrollViewer>
+</Window>
